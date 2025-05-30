@@ -5,7 +5,6 @@ import br.com.usuarios.keycloak.UserKeycloak;
 import br.com.usuarios.keycloak.models.*;
 import br.com.usuarios.repositoryes.TenantRepository;
 import br.com.usuarios.repositoryes.UsuarioRepository;
-import br.modelos.dto.usuarios.mapper.UsuarioMapper;
 import br.modelos.dto.usuarios.request.UsuarioRequest;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final TenantRepository tenantRepository;
-    private final UsuarioMapper usuarioMapper;
     private final UserKeycloak userKeycloak;
     private final KeycloakService keycloakService;
     private final GrupoKeycloak grupoKeycloak;
