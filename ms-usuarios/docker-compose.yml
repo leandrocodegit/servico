@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  app-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: usuario-0.0.1
+    ports:
+      - "9082:9082"
+    environment:
+      - JAVA_OPTS=-Dspring.profiles.active=prod
+    container_name: usuario
+    networks:
+      - backend-toten_totem-network
+
+networks:
+  backend-toten_totem-network:
+    external: true
