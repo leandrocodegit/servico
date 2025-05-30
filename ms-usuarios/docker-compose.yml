@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ms-usuarios-0.0.1-SNAPSHOT
+    image: usuario-0.0.1
     ports:
       - "9082:9082"
     environment:
