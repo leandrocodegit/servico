@@ -17,10 +17,10 @@ FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
 # Copia o JAR do estágio de build para o estágio de runtime
-COPY --from=builder /app/target/ms-usuarios-0.0.1-SNAPSHOT.jar /app/ms-usuarios-0.0.1-SNAPSHOT.jar
+COPY --from=builder /app/target/usuarios-0.0.1.jar /app/usuarios-0.0.1.jar
 
 # Porta em que a aplicação irá rodar
 EXPOSE 9082
 
 # Comando para executar a aplicação
-CMD ["java", "-jar", "/app/ms-usuarios-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "/app/usuarios-0.0.1.jar"]

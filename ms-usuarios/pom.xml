@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com</groupId>
-	<artifactId>ms-usuarios</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>usuarios</artifactId>
+	<version>0.0.1</version>
 	<name>ms-usuarios</name>
 	<description>Usuários</description>
 	<url/>
