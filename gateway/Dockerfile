@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=builder /app/target/gateway-0.0.1-SNAPSHOT.jar /app/gateway-0.0.1-SNAPSHOT.jar
 
 # Porta em que a aplicação irá rodar
-EXPOSE 9000
+EXPOSE 2083
 
 # Comando para executar a aplicação
 CMD ["java", "-jar", "/app/gateway-0.0.1-SNAPSHOT.jar"]
