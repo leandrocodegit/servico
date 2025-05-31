@@ -33,22 +33,25 @@ public class UsuarioService {
 
     public UsuarioInfo buscarInfoUsuarioPorID(String tenantId, UUID id) {
         var user = userKeycloak.buscarUsuarioPorId(tenantId, id);
-        var tenants = user.getAttributes().get("tenants");
-        var controleACesso = user.getAttributes().get("controle_acesso");
-        var tema = user.getAttributes().get("tema");
+        var atributos = user.getAttributes();
+        var tenants = atributos.get("tenants");
+        var controleACesso = atributos.get("controle_acesso");
+        var tema = atributos.get("tema");
 
         var info = UsuarioInfo.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .firstName(user.getFirstName())
-               .controle_acesso(controleACesso != null && !controleACesso.isEmpty() ? new Gson().fromJson(controleACesso.get(0).toString(), ControleAcesso.class) : null)
-                .tema(tema != null && !tema.isEmpty() ? new Gson().fromJson(tema.get(0).toString(), Tema.class) : null)
-                .tenants((ArrayList)tenants)
+                .firstName(user.getFirstName())              
                 .enabled(user.isEnabled())
                 .emailVerified(user.isEmailVerified())
                 .build();
 
+        if (atributos != null) {
+            info.setControle_acesso(controleACesso != null && !controleACesso.isEmpty() ? new Gson().fromJson(controleACesso.get(0).toString(), ControleAcesso.class) : null)
+            info.setTema(tema != null && !tema.isEmpty() ? new Gson().fromJson(tema.get(0).toString(), Tema.class) : null)
+            info.setTenants((ArrayList) tenants);
+        }
         var grupos = userKeycloak.listaGruposUsuario(tenantId, id, 100);
         info.setGroups(grupos);
         return info;
