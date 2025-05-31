@@ -18,7 +18,7 @@ public class FeignConfig {
         return new CustomErrorDecoder();
     }
 
-    @Bean
+    
     public Encoder multipartFormEncoder() {
         return new SpringFormEncoder(new SpringEncoder(() -> new HttpMessageConverters(new RestTemplate().getMessageConverters())));
     }
