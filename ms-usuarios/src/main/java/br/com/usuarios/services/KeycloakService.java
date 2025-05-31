@@ -23,6 +23,6 @@ public class KeycloakService {
         forms.put("grant_type","client_credentials");
         forms.put("scope", "openid profile");
 
-        return "";
+        return new TokenKeycloak();
     }
 }

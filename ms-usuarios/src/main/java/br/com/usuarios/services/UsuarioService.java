@@ -25,7 +25,6 @@ public class UsuarioService {
     private final GrupoKeycloak grupoKeycloak;
 
     public void joinGrupoUsuario(String tenantId, UUID idUsuario, UUID idGrupo, boolean isDelete) {
-        var token = "Bearer " + keycloakService.login().getAccessToken();
         if (isDelete)
             userKeycloak.unjoinGrupoUsuario(tenantId, idUsuario, idGrupo);
         else
@@ -55,26 +54,22 @@ public class UsuarioService {
         return info;
     }
     public UsuarioKeycloak buscarUsuarioPorID(String tenantId, UUID id) {
-        var token = "Bearer " + keycloakService.login().getAccessToken();
         var user = userKeycloak.buscarUsuarioPorId(tenantId, id);
 
         return user;
     }
 
     public List<UsuarioKeycloak> listaTodosUsuarios(String tenantId, Pageable pageable) {
-        var token = keycloakService.login();
         var lista = userKeycloak.listaUsuarios(tenantId,false, pageable.getPageNumber(), pageable.getPageSize());
         return lista;
     }
 
     public List<Group> litaGrupos(String tenantId) {
-        var token = keycloakService.login();
         var lista = grupoKeycloak.listaGrupos(tenantId, 100);
         return lista;
     }
 
     public void atualizarUsuario(String tenantId, UsuarioKeycloakRequest request) {
-        var token = "Bearer " + keycloakService.login().getAccessToken();
         var user = buscarUsuarioPorID(tenantId, request.getSub());
 
         String acesso = new Gson().toJson(request.getControleAcesso());
