@@ -51,7 +51,8 @@ public class ExceptionResponseHandler {
     }
 
     private ResponseEntity<Error> buildErrorResponse(Exception exception, HttpStatus status, WebRequest request, String message) {
-        Error errorDto = new Error(status.value(), message);
+            exception.printStackTrace();        
+            Error errorDto = new Error(status.value(), message);
         return ResponseEntity.status(status).body(errorDto);
     }
 
