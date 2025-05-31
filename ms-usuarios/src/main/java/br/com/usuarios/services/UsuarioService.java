@@ -34,9 +34,6 @@ public class UsuarioService {
     public UsuarioInfo buscarInfoUsuarioPorID(String tenantId, UUID id) {
         var user = userKeycloak.buscarUsuarioPorId(tenantId, id);
         var atributos = user.getAttributes();
-        var tenants = atributos.get("tenants");
-        var controleACesso = atributos.get("controle_acesso");
-        var tema = atributos.get("tema");
 
         var info = UsuarioInfo.builder()
                 .id(user.getId())
@@ -48,6 +45,9 @@ public class UsuarioService {
                 .build();
 
         if (atributos != null) {
+            var tenants = atributos.get("tenants");
+            var controleACesso = atributos.get("controle_acesso");
+            var tema = atributos.get("tema");
             info.setControle_acesso(controleACesso != null && !controleACesso.isEmpty() ? new Gson().fromJson(controleACesso.get(0).toString(), ControleAcesso.class) : null);
             info.setTema(tema != null && !tema.isEmpty() ? new Gson().fromJson(tema.get(0).toString(), Tema.class) : null);
             info.setTenants((ArrayList) tenants);
