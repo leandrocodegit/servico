@@ -48,8 +48,8 @@ public class UsuarioService {
                 .build();
 
         if (atributos != null) {
-            info.setControle_acesso(controleACesso != null && !controleACesso.isEmpty() ? new Gson().fromJson(controleACesso.get(0).toString(), ControleAcesso.class) : null)
-            info.setTema(tema != null && !tema.isEmpty() ? new Gson().fromJson(tema.get(0).toString(), Tema.class) : null)
+            info.setControle_acesso(controleACesso != null && !controleACesso.isEmpty() ? new Gson().fromJson(controleACesso.get(0).toString(), ControleAcesso.class) : null);
+            info.setTema(tema != null && !tema.isEmpty() ? new Gson().fromJson(tema.get(0).toString(), Tema.class) : null);
             info.setTenants((ArrayList) tenants);
         }
         var grupos = userKeycloak.listaGruposUsuario(tenantId, id, 100);
