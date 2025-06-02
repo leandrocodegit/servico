@@ -43,8 +43,8 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
             addCors(exchange);
             String token = authHeader.substring(7);
 
-            String jwkSetUri = "http://keycloak:8080/realms/" + realm + "/protocol/openid-connect/certs";
-            String issuer = "http://keycloak:8080/realms/" + realm;
+            String jwkSetUri = "https://auth.simodapp.com/realms/" + realm + "/protocol/openid-connect/certs";
+            String issuer = "https://auth.simodapp.com/realms/" + realm;
 
             NimbusReactiveJwtDecoder decoder = NimbusReactiveJwtDecoder.withJwkSetUri(jwkSetUri)
                     .build();
