@@ -30,10 +30,10 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
         var host = exchange.getRequest().getPath().pathWithinApplication().value();
         var request = exchange.getRequest();
 
-        if(true || host.equals("/cliente") || host.contains("/processo") || host.contains("/validate"))
+        if (host.equals("/cliente") || host.contains("/processo") || host.contains("/validate"))
             return chain.filter(exchange);
 
-        if(false && realm == null){
+        if (false && realm == null) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
@@ -56,14 +56,13 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
 
             try {
                 Jwt jwt = jwtDecoder.decode(token);
-                List<String> tenants = jwt.getClaimAsStringList("tenants");
-                boolean authorized = realm != null && tenants != null && tenants.contains(realm);
+                String sub = jwt.getClaimAsString("sub");
 
-                if(!authorized){
+                if (realm == null) {
                     exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
                     return exchange.getResponse().setComplete();
                 }
-
+                exchange.getRequest().getHeaders().add("X-User-ID", sub);
                 AbstractAuthenticationToken authentication = new JwtAuthenticationToken(jwt);
                 SecurityContext context = new SecurityContextImpl(authentication);
                 return chain.filter(exchange).contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(context)));
@@ -76,28 +75,28 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
         return chain.filter(exchange);
     }
 
-    private void addCors(ServerWebExchange exchange){
+    private void addCors(ServerWebExchange exchange) {
         HttpHeaders headers = exchange.getResponse().getHeaders();
-        if(!headers.containsKey("Access-Control-Allow-Origin")) {
+        if (!headers.containsKey("Access-Control-Allow-Origin")) {
             headers.add("Access-Control-Allow-Origin", "*"); // ou origem dinâmica
             headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             headers.add("Access-Control-Allow-Headers", "*");
             headers.add("Access-Control-Allow-Credentials", "false");
         }
     }
+
     private ReactiveAuthorizationManager<AuthorizationContext> clientIdMatchesTenantClaim() {
         return (authenticationMono, context) -> authenticationMono.map(auth -> {
             if (auth.getPrincipal() instanceof Jwt jwt) {
-                List<String> tenants = jwt.getClaimAsStringList("tenants");
 
                 List<String> roles = jwt.getClaimAsStringList("roles");
-                if(!roles.contains("client") && !roles.contains("admin"))
+                if (!roles.contains("client") && !roles.contains("admin"))
                     return new AuthorizationDecision(false);
 
                 String clientId = context.getExchange().getRequest().getHeaders().getFirst("X-Tenant-ID");
                 String issuerUri = "http://localhost:8080/realms/" + clientId;
                 ReactiveJwtDecoders.fromIssuerLocation(issuerUri);
-                boolean authorized = clientId != null && tenants != null && tenants.contains(clientId);
+                boolean authorized = clientId != null;
                 return new AuthorizationDecision(authorized);
             }
             return new AuthorizationDecision(false);

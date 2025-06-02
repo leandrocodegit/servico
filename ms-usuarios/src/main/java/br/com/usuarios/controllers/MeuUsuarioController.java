@@ -1,0 +1,40 @@
+package br.com.usuarios.controllers;
+
+import br.com.usuarios.keycloak.models.AuthEvent;
+import br.com.usuarios.keycloak.models.UsuarioInfo;
+import br.com.usuarios.keycloak.models.UsuarioKeycloak;
+import br.com.usuarios.keycloak.models.UsuarioKeycloakRequest;
+import br.com.usuarios.services.UsuarioService;
+import br.modelos.dto.usuarios.request.UsuarioRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/conta")
+@RequiredArgsConstructor
+public class MeuUsuarioController {
+
+    private final UsuarioService usuarioService;
+
+    @GetMapping
+    public ResponseEntity<UsuarioInfo> buscarPorId(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID id) {
+        return ResponseEntity.ok(usuarioService.buscarInfoUsuarioPorID(tenantId, id));
+    }
+
+    @GetMapping("/eventos")
+    public ResponseEntity<List<AuthEvent>> buscarEventosUsuario(@RequestHeader("X-Tenant-ID") String tenantId,@RequestHeader("X-User-ID") UUID id, Pageable pageable) {
+        return ResponseEntity.ok(usuarioService.listaEventosUsuario(tenantId, id, pageable));
+    }
+
+    @PutMapping
+    public ResponseEntity<?> atualizarUsuarios(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID id, @RequestBody UsuarioKeycloakRequest request) {
+        usuarioService.atualizarUsuario(tenantId, request);
+        return ResponseEntity.ok().build();
+    }
+}

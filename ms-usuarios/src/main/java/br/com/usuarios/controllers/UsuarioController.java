@@ -1,5 +1,6 @@
 package br.com.usuarios.controllers;
 
+import br.com.usuarios.keycloak.models.AuthEvent;
 import br.com.usuarios.keycloak.models.UsuarioInfo;
 import br.com.usuarios.keycloak.models.UsuarioKeycloak;
 import br.com.usuarios.keycloak.models.UsuarioKeycloakRequest;
@@ -34,6 +35,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioKeycloak> buscarPorId(@RequestHeader("X-Tenant-ID") String tenantId, @PathVariable UUID id) {
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorID(tenantId, id));
     }
+
     @GetMapping
     public ResponseEntity<List<UsuarioKeycloak>> listaUsuarios(@RequestHeader("X-Tenant-ID") String tenantId, Pageable pageable) {
         return ResponseEntity.ok(usuarioService.listaTodosUsuarios(tenantId, pageable));

@@ -1,5 +1,6 @@
 package br.com.usuarios.services;
 
+import br.com.usuarios.keycloak.EventsKeycloak;
 import br.com.usuarios.keycloak.GrupoKeycloak;
 import br.com.usuarios.keycloak.UserKeycloak;
 import br.com.usuarios.keycloak.models.*;
@@ -21,6 +22,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final TenantRepository tenantRepository;
     private final UserKeycloak userKeycloak;
+    private final EventsKeycloak eventsKeycloak;
     private final KeycloakService keycloakService;
     private final GrupoKeycloak grupoKeycloak;
 
@@ -90,6 +92,11 @@ public class UsuarioService {
 
         userKeycloak.atualizarUsuario(tenantId, request.getSub(), user);
 
+    }
+
+    public List<AuthEvent> listaEventosUsuario(String tenantId, UUID userId,  Pageable pageable) {
+        var lista = eventsKeycloak.listaEventoUsuario(tenantId, userId.toString(), pageable.getPageNumber(), pageable.getPageSize());
+        return lista;
     }
 
     @Transactional

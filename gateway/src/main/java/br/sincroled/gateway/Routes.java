@@ -49,6 +49,14 @@ public class Routes {
     }
 
     @Bean
+    public RouteLocator meuUsuarioApi(RouteLocatorBuilder builder) {
+        return builder.routes()
+                .route("conta", r ->
+                        r.path("/conta/**").uri("http://usuario:9082")
+                ).build();
+    }
+
+    @Bean
     public RouteLocator clienteApi(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("cliente", r ->
@@ -65,4 +73,5 @@ public class Routes {
                         ).uri("http://localhost:8085/")
                 ).build();
     }
+
 }
