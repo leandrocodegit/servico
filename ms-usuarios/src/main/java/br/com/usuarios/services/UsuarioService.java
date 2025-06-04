@@ -50,7 +50,7 @@ public class UsuarioService {
             var controleACesso = atributos.get("controle_acesso");
             var tema = atributos.get("tema");
             info.setControle_acesso(controleACesso != null && !controleACesso.isEmpty() ? new Gson().fromJson(controleACesso.get(0).toString(), ControleAcesso.class) : null);
-            info.setTema(tema != null && !tema.isEmpty() ? new Gson().fromJson(tema.get(0).toString(), Tema.class) : null); 
+            info.setTema(tema != null && !tema.isEmpty() ? new Gson().fromJson(tema.get(0).toString(), Tema.class) : null);
         }else{
             info.setControle_acesso(ControleAcesso.builder().ativo(false).build());
             info.setTema(Tema.builder().color("teal").dark(false).build());
@@ -88,6 +88,15 @@ public class UsuarioService {
         user.setAttributes(attributes);
 
         userKeycloak.atualizarUsuario(tenantId, request.getSub(), user);
+
+    }
+
+    public void atualizarTemaUsuario(String tenantId, UUID userId, Tema temaRequest) {
+        var user = buscarUsuarioPorID(tenantId, userId);
+        String tema = new Gson().toJson(temaRequest);
+        user.getAttributes().put("tema", new ArrayList<>(){{add(tema);}});
+
+        userKeycloak.atualizarUsuario(tenantId, userId, user);
 
     }
 

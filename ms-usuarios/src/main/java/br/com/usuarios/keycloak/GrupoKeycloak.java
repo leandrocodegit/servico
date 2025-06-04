@@ -19,4 +19,5 @@ public interface GrupoKeycloak {
     public List<Group> listaGrupos(
             @PathVariable String realm,
             @RequestParam int max);
+
 }

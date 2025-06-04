@@ -1,9 +1,6 @@
 package br.com.usuarios.controllers;
 
-import br.com.usuarios.keycloak.models.AuthEvent;
-import br.com.usuarios.keycloak.models.UsuarioInfo;
-import br.com.usuarios.keycloak.models.UsuarioKeycloak;
-import br.com.usuarios.keycloak.models.UsuarioKeycloakRequest;
+import br.com.usuarios.keycloak.models.*;
 import br.com.usuarios.services.UsuarioService;
 import br.modelos.dto.usuarios.request.UsuarioRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +32,12 @@ public class MeuUsuarioController {
     @PutMapping
     public ResponseEntity<?> atualizarUsuarios(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID id, @RequestBody UsuarioKeycloakRequest request) {
         usuarioService.atualizarUsuario(tenantId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/tema")
+    public ResponseEntity<?> atualizarUsuarios(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID id, @RequestBody Tema request) {
+        usuarioService.atualizarTemaUsuario(tenantId, id, request);
         return ResponseEntity.ok().build();
     }
 }

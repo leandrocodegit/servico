@@ -57,4 +57,6 @@ public interface UserKeycloak {
             @PathVariable String realm,
             @PathVariable UUID idUser,
             @RequestParam int max);
+
+
 }
