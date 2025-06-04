@@ -13,6 +13,7 @@ import java.util.Map;
 @Builder
 public class UsuarioKeycloak {
 
+    private Access access;
     private String id;
     private Map<String, ArrayList> attributes;
     private List<String> requiredActions;
@@ -21,6 +22,5 @@ public class UsuarioKeycloak {
     private String email;
     private String firstName;
     private String lastName;
-    private List<String> groups;
     private boolean enabled;
 }

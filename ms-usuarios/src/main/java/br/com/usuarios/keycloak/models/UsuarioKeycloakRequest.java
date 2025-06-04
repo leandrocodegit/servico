@@ -14,6 +14,7 @@ import java.util.UUID;
 @Builder
 public class UsuarioKeycloakRequest {
 
+    private UUID id;
     private UUID sub;
     private Map<String, Object> attributes;
     private List<String> requiredActions;
@@ -22,7 +23,7 @@ public class UsuarioKeycloakRequest {
     private String email;
     private String firstName;
     private String lastName;
-    private List<String> groups;
+    private List<Group> groups;
     private boolean enabled;
     private List<String> acessos;
     private RoleMappingResponse roles;

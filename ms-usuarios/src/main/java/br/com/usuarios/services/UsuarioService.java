@@ -76,7 +76,7 @@ public class UsuarioService {
     }
 
     public void atualizarUsuario(String tenantId, UsuarioKeycloakRequest request) {
-        var user = buscarUsuarioPorID(tenantId, request.getSub());
+        var user = buscarUsuarioPorID(tenantId, request.getId());
 
         String acesso = new Gson().toJson(request.getControleAcesso());
         String tema = new Gson().toJson(request.getTema());
@@ -87,7 +87,7 @@ public class UsuarioService {
 
         user.setAttributes(attributes);
 
-        userKeycloak.atualizarUsuario(tenantId, request.getSub(), user);
+        userKeycloak.atualizarUsuario(tenantId, request.getId(), user);
 
     }
 
