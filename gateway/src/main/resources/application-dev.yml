@@ -1,5 +1,8 @@
 server:
   port: 9000
+  ssl:
+    enabled: false
+
 spring:
   codec:
     max-in-memory-size: 10MB

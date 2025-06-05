@@ -1,6 +1,0 @@
-server:
-  port: 9000
-spring:
-  codec:
-    max-in-memory-size: 10MB
-keycloak-issuer: http://127.0.0.1:8080/realms/
