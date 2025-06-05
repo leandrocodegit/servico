@@ -50,14 +50,7 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
             addCors(exchange);
             String token = authHeader.substring(7);
 
-            String jwkSetUri = "http://localhost:8080/realms/" + realm + "/protocol/openid-connect/certs";
-            String issuer = "http://localhost:8080/realms/" + realm;
-
-            NimbusReactiveJwtDecoder decoder = NimbusReactiveJwtDecoder.withJwkSetUri(jwkSetUri)
-                    .build();
-
-            OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
-            decoder.setJwtValidator(withIssuer);
+            String issuer = "http://keycloak:8080/realms/" + realm;
 
             JwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(issuer);
 
