@@ -3,6 +3,7 @@ package br.sincroled.gateway;
 import br.sincroled.gateway.models.ControleAcesso;
 import br.sincroled.gateway.models.DiasSemana;
 import com.nimbusds.jose.shaded.gson.Gson;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -31,6 +32,9 @@ import java.util.stream.Collectors;
 @Component
 public class DynamicJwtDecoderWebFilter implements WebFilter {
 
+    @Value("${keycloak-issuer}")
+    private String issuer;
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
@@ -49,10 +53,7 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
         if (authHeader != null && authHeader != null && authHeader.startsWith("Bearer ")) {
             addCors(exchange);
             String token = authHeader.substring(7);
-
-            String issuer = "http://keycloak:8080/realms/" + realm;
-
-            JwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(issuer);
+            JwtDecoder jwtDecoder = JwtDecoders.fromOidcIssuerLocation(issuer + realm);
 
             try {
                 Jwt jwt = jwtDecoder.decode(token);
