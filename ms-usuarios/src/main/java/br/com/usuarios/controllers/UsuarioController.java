@@ -37,8 +37,8 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioKeycloak>> listaUsuarios(@RequestHeader("X-Tenant-ID") String tenantId, Pageable pageable) {
-        return ResponseEntity.ok(usuarioService.listaTodosUsuarios(tenantId, pageable));
+    public ResponseEntity<List<UsuarioKeycloak>> listaUsuarios(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID idUserLogado, Pageable pageable) {
+        return ResponseEntity.ok(usuarioService.listaTodosUsuarios(tenantId, pageable).stream().filter(user -> !user.getId().equals(idUserLogado.toString())).toList());
     }
 
     @PostMapping

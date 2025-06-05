@@ -13,8 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class ControleAcesso {
 
-    private boolean ativo;
+    private Boolean ativo;
+    private Boolean controlarDias;
+    private Boolean controlarHorario;
     private List<DiasSemana> dias;
     private String inicio;
     private String fim;
+    private Long tolerancia;
 }

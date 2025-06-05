@@ -44,7 +44,7 @@ public class Routes {
     public RouteLocator usuarioApi(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("usuario", r ->
-                        r.path("/usuario/**").uri("http://usuario:9082")
+                        r.path("/usuario/**").uri("http://localhost:9082")
                 ).build();
     }
 
@@ -52,7 +52,7 @@ public class Routes {
     public RouteLocator meuUsuarioApi(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("conta", r ->
-                        r.path("/conta/**").uri("http://usuario:9082")
+                        r.path("/conta/**").uri("http://localhost:9082")
                 ).build();
     }
 

@@ -1,5 +1,8 @@
 package br.sincroled.gateway;
 
+import br.sincroled.gateway.models.ControleAcesso;
+import br.sincroled.gateway.models.DiasSemana;
+import com.nimbusds.jose.shaded.gson.Gson;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -18,7 +21,12 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class DynamicJwtDecoderWebFilter implements WebFilter {
@@ -28,7 +36,6 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         String realm = exchange.getRequest().getHeaders().getFirst("X-Tenant-ID");
         var host = exchange.getRequest().getPath().pathWithinApplication().value();
-        var request = exchange.getRequest();
 
         if (host.equals("/cliente") || host.contains("/processo") || host.contains("/validate"))
             return chain.filter(exchange);
@@ -43,8 +50,8 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
             addCors(exchange);
             String token = authHeader.substring(7);
 
-            String jwkSetUri = "https://auth.simodapp.com/realms/" + realm + "/protocol/openid-connect/certs";
-            String issuer = "https://auth.simodapp.com/realms/" + realm;
+            String jwkSetUri = "http://localhost:8080/realms/" + realm + "/protocol/openid-connect/certs";
+            String issuer = "http://localhost:8080/realms/" + realm;
 
             NimbusReactiveJwtDecoder decoder = NimbusReactiveJwtDecoder.withJwkSetUri(jwkSetUri)
                     .build();
@@ -57,6 +64,46 @@ public class DynamicJwtDecoderWebFilter implements WebFilter {
             try {
                 Jwt jwt = jwtDecoder.decode(token);
                 String sub = jwt.getClaimAsString("sub");
+                Map<String, Object> controleAcesso = jwt.getClaim("controle_acesso");
+                Boolean controleAcessoAtivo = (Boolean) controleAcesso.get("ativo");
+
+                if (controleAcessoAtivo != null && controleAcessoAtivo.equals(Boolean.TRUE)) {
+                    Boolean controlarDias = (Boolean) controleAcesso.get("controlarDias");
+
+                    if (controlarDias != null && controlarDias.equals(Boolean.TRUE)) {
+                        var diaHoje = LocalDateTime.now().getDayOfWeek().getValue();
+                        List<String> diasStr = (List<String>) controleAcesso.get("dias");
+                        List<DiasSemana> controleAcessoDias = diasStr.stream()
+                                .map(DiasSemana::valueOf)
+                                .collect(Collectors.toList());
+                        if (controleAcessoDias.stream().noneMatch(dia -> dia.dia == diaHoje)) {
+                            exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+                            return exchange.getResponse().setComplete();
+                        }
+
+                        Boolean controlarHorario = (Boolean) controleAcesso.get("controlarHorario");
+
+                        if(controlarHorario != null && controlarHorario.equals(Boolean.TRUE)) {
+                            LocalTime horaAtual = LocalTime.now();
+                            Long tolerancia = (Long) controleAcesso.get("tolerancia");
+                            if(tolerancia == null)
+                                tolerancia = 0L;
+                            LocalTime controleAcessoInicio = LocalTime.parse((String) controleAcesso.get("inicio"));
+                            LocalTime controleAcessoFim = LocalTime.parse((String) controleAcesso.get("fim"));
+                            if (!controleAcessoInicio.equals(controleAcessoFim)) {
+                                var anterior = horaAtual.plusMinutes(tolerancia).isBefore(controleAcessoInicio);
+                                var posterior = horaAtual.minusMinutes(tolerancia).isAfter(controleAcessoFim);
+                                if (anterior || posterior) {
+                                    exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+                                    return exchange.getResponse().setComplete();
+                                }
+                            }
+                        }
+                    } else {
+                        exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+                        return exchange.getResponse().setComplete();
+                    }
+                }
 
                 if (realm == null) {
                     exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
