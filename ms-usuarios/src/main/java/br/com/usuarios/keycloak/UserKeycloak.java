@@ -1,6 +1,7 @@
 package br.com.usuarios.keycloak;
 
 import br.com.usuarios.configs.FeignConfig;
+import br.com.usuarios.keycloak.models.Credential;
 import br.com.usuarios.keycloak.models.Group;
 import br.com.usuarios.keycloak.models.RoleMappingResponse;
 import br.com.usuarios.keycloak.models.UsuarioKeycloak;
@@ -22,6 +23,7 @@ public interface UserKeycloak {
     public UsuarioKeycloak buscarUsuarioPorId(
             @PathVariable String realm,
             @PathVariable UUID id);
+
     @GetMapping("/{realm}/users")
     public List<UsuarioKeycloak> listaUsuarios(
             @PathVariable String realm,
@@ -56,6 +58,33 @@ public interface UserKeycloak {
     public List<Group> listaGruposUsuario(
             @PathVariable String realm,
             @PathVariable UUID idUser,
+            @RequestParam int max);
+
+    @PostMapping("/{realm}/users")
+    public void criarUsuario(
+            @PathVariable String realm,
+            UsuarioKeycloak usuarioKeycloak);
+
+    @GetMapping("/{realm}/users")
+    public List<UsuarioRequest> buscarUsuario(
+            @PathVariable String realm,
+            @RequestParam(required = true) String email);
+
+    @PutMapping("/{realm}/users/{idUser}/reset-password")
+    public void criarCredencial(
+            @RequestBody Credential credential,
+            @PathVariable String realm,
+            @PathVariable UUID idUser);
+
+    @GetMapping("/{realm}/users/{idUser}/credentials")
+    public List<Credential> listaCredencial(
+            @PathVariable String realm,
+            @PathVariable UUID idUser);
+
+    @GetMapping("/{realm}/users/{idUser}/groups")
+    public List<Group> listaGruposUsuario(
+            @PathVariable String realm,
+            @PathVariable String idUser,
             @RequestParam int max);
 
 

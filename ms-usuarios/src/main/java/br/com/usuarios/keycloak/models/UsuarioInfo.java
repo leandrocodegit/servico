@@ -20,6 +20,7 @@ public class UsuarioInfo {
     private String email;
     private String firstName;
     private String lastName;
+    private String phone;
     private List<Group> groups;
     private boolean enabled;
     private List<String> tenants;
