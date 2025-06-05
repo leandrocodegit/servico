@@ -140,7 +140,7 @@ public class UsuarioService {
                     .lastName(request.getFirstName())
                     .username(request.getUsername())
                     .email(request.getEmail())
-                    .emailVerified(true)
+                    .emailVerified(false)
                             .requiredActions(List.of("VERIFY_EMAIL", "UPDATE_PASSWORD"))
                     .enabled(true)
                     .build());
