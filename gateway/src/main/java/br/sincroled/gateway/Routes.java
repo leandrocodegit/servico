@@ -1,18 +1,24 @@
 package br.sincroled.gateway;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+
 @Configuration
 public class Routes {
 
+    private final RoutesConfig routesConfig;
     private final RouteFilter filter;
 
-    public Routes(RouteFilter filter) {
+    public Routes(RoutesConfig routesConfig, RouteFilter filter) {
+        this.routesConfig = routesConfig;
         this.filter = filter;
     }
+
     @Bean
     public RouteLocator routesCloudaflare(RouteLocatorBuilder builder) {
         return builder.routes()
@@ -44,7 +50,7 @@ public class Routes {
     public RouteLocator usuarioApi(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("usuario", r ->
-                        r.path("/usuario/**").uri("http://localhost:9082")
+                        r.path("/usuario/**").uri(routesConfig.getMap().get("usuario"))
                 ).build();
     }
 
@@ -52,7 +58,7 @@ public class Routes {
     public RouteLocator meuUsuarioApi(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("conta", r ->
-                        r.path("/conta/**").uri("http://localhost:9082")
+                        r.path("/conta/**").uri(routesConfig.getMap().get("conta"))
                 ).build();
     }
 

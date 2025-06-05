@@ -4,3 +4,8 @@ spring:
   codec:
     max-in-memory-size: 10MB
 keycloak-issuer: http://localhost:8080/realms/
+
+routes:
+  map:
+    usuario: http://localhost:9082
+    conta: http://localhost:9082

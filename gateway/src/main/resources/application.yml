@@ -10,3 +10,8 @@ spring:
   codec:
     max-in-memory-size: 10MB
 keycloak-issuer: https://auth.simodapp.com/realms/
+
+routes:
+  map:
+    usuario: http://usuario:9082
+    conta: http://usuario:9082
