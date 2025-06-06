@@ -4,11 +4,12 @@ import java.util.List;
 
 public enum GruposName {
 
-    ADM("Administrador", List.of("query-users","view-users","manage-users")),
-    AUS("Administrar usuários", List.of("query-users","view-users", "manage-users")),
+    ADM("Administrador", List.of("query-users","view-users","manage-users","realm-management")),
+    AUS("Administrar usuários", List.of("query-users","view-users", "manage-users","realm-management")),
     EUS("Editar usuários", List.of("query-users","view-users")),
     RUS("Remover usuários", List.of("query-users","view-users")),
-    CUS("Cria usuários", List.of("query-users","view-users"));
+    CUS("Cria usuários", List.of("query-users","view-users")),
+    HIS("Ver histórico", List.of("realm-management"));
 
     private String nome;
     private List<String> roles;

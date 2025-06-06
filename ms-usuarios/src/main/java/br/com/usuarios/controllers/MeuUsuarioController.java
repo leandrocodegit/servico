@@ -30,7 +30,7 @@ public class MeuUsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizarUsuarios(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID id, @RequestBody UsuarioKeycloakRequest request) {
+    public ResponseEntity<?> atualizarUsuario(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID id, @RequestBody UsuarioKeycloakRequest request) {
         usuarioService.atualizarUsuario(tenantId, request);
         return ResponseEntity.ok().build();
     }
@@ -38,6 +38,12 @@ public class MeuUsuarioController {
     @PutMapping("/tema")
     public ResponseEntity<?> atualizarUsuarios(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID id, @RequestBody Tema request) {
         usuarioService.atualizarTemaUsuario(tenantId, id, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<?> alterarSenha(@RequestHeader("X-Tenant-ID") String tenantId, @RequestHeader("X-User-ID") UUID id, @RequestBody PasswordRequest request) {
+        usuarioService.alterarUsuario(tenantId, id, request);
         return ResponseEntity.ok().build();
     }
 }

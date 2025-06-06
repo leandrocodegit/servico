@@ -1,10 +1,7 @@
 package br.com.usuarios.keycloak;
 
 import br.com.usuarios.configs.FeignConfig;
-import br.com.usuarios.keycloak.models.Credential;
-import br.com.usuarios.keycloak.models.Group;
-import br.com.usuarios.keycloak.models.RoleMappingResponse;
-import br.com.usuarios.keycloak.models.UsuarioKeycloak;
+import br.com.usuarios.keycloak.models.*;
 import br.modelos.dto.usuarios.request.UsuarioKeycloakRequest;
 import br.modelos.dto.usuarios.request.UsuarioRequest;
 import br.modelos.dto.usuarios.response.UsuarioResponse;
@@ -86,6 +83,20 @@ public interface UserKeycloak {
             @PathVariable String realm,
             @PathVariable String idUser,
             @RequestParam int max);
+
+    @DeleteMapping(value = "/{realm}/users/{idUser}")
+    void removerUsuario(
+            @PathVariable String realm,
+            @PathVariable UUID idUser);
+
+    @PostMapping(value = "/{realm}/users/{idUser}/logout")
+    void logout(
+            @PathVariable String realm,
+            @PathVariable UUID idUser);
+    @GetMapping(value = "/{realm}/users/{idUser}/sessions")
+    List<UserSession> sessionsUsuario(
+            @PathVariable String realm,
+            @PathVariable UUID idUser);
 
 
 }

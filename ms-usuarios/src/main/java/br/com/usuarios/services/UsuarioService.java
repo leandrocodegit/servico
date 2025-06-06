@@ -2,6 +2,7 @@ package br.com.usuarios.services;
 
 import br.com.usuarios.keycloak.EventsKeycloak;
 import br.com.usuarios.keycloak.GrupoKeycloak;
+import br.com.usuarios.keycloak.LoginKeycloak;
 import br.com.usuarios.keycloak.UserKeycloak;
 import br.com.usuarios.keycloak.models.*;
 import br.com.usuarios.repositoryes.TenantRepository;
@@ -27,6 +28,7 @@ public class UsuarioService {
     private final UserKeycloak userKeycloak;
     private final EventsKeycloak eventsKeycloak;
     private final KeycloakService keycloakService;
+    private final LoginKeycloak loginKeycloak;
     private final GrupoKeycloak grupoKeycloak;
 
     public void joinGrupoUsuario(String tenantId, UUID idUsuario, UUID idGrupo, boolean isDelete) {
@@ -73,8 +75,17 @@ public class UsuarioService {
         return user;
     }
 
+    public void removerUsuarioPorID(String tenantId, UUID useId) {
+        userKeycloak.removerUsuario(tenantId, useId);
+    }
+
     public List<UsuarioKeycloak> listaTodosUsuarios(String tenantId, Pageable pageable) {
         var lista = userKeycloak.listaUsuarios(tenantId, false, pageable.getPageNumber(), pageable.getPageSize());
+        return lista;
+    }
+
+    public List<UserSession> listaSessoesUsuario(String tenantId, UUID userId) {
+        var lista = userKeycloak.sessionsUsuario(tenantId, userId);
         return lista;
     }
 
@@ -97,6 +108,10 @@ public class UsuarioService {
             add(acesso);
         }});
 
+        attributes.put("phone", new ArrayList<>() {{
+            add(request.getPhone());
+        }});
+
         user.setAttributes(attributes);
 
         userKeycloak.atualizarUsuario(tenantId, request.getId(), user);
@@ -112,6 +127,12 @@ public class UsuarioService {
 
         userKeycloak.atualizarUsuario(tenantId, userId, user);
 
+    }
+
+    public void ativarUsuario(String tenantId, UUID userId) {
+        var user = buscarUsuarioPorID(tenantId, userId);
+        user.setEnabled(!user.isEnabled());
+        userKeycloak.atualizarUsuario(tenantId, userId, user);
     }
 
     public List<AuthEvent> listaEventosUsuario(String tenantId, UUID userId, Pageable pageable) {
@@ -141,7 +162,7 @@ public class UsuarioService {
                     .username(request.getUsername())
                     .email(request.getEmail())
                     .emailVerified(false)
-                            .requiredActions(List.of("VERIFY_EMAIL", "UPDATE_PASSWORD"))
+                    .requiredActions(List.of("VERIFY_EMAIL", "UPDATE_PASSWORD"))
                     .enabled(true)
                     .build());
         }
@@ -164,5 +185,29 @@ public class UsuarioService {
                         .value("Pass2020!@#$")
                         .build(), tenant, userId.get().getId());
         }
+    }
+
+    public void alterarUsuario(String tenantId, UUID userId, PasswordRequest passwordRequest) {
+
+        var login = login(tenantId, passwordRequest);
+
+
+        userKeycloak.logout(tenantId, userId);
+
+    }
+
+    public void logoutUser(String tenantId, UUID userId){
+        userKeycloak.logout(tenantId, userId);
+    }
+
+    private String login(String clientId, PasswordRequest passwordRequest) {
+
+        Map<String, String> forms = new HashMap<>();
+        forms.put("client_id", clientId);
+        forms.put("username", passwordRequest.getUsername());
+        forms.put("password", passwordRequest.getOld());
+        forms.put("grant_type", "password");
+
+        return "Bearer " + loginKeycloak.login(clientId, forms).getBody().getAccessToken();
     }
 }
