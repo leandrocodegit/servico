@@ -24,15 +24,15 @@ public class ProcessDefinitionController {
     @Autowired
     private ProcessEngine processEngineService;
 
-    @GetMapping
-    public ResponseEntity<List<ProcessDefinitionDto>> listaTask(@RequestHeader("X-Tenant-Id") String tenantId){
-        ProcessDefinition processDefinition = (ProcessDefinition) this.processEngineService()..getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).tenantIdIn(new String[]{tenantId}).latestVersion().singleResult();
-
-        List<ProcessDefinitionEntity> processDefinitionEntities = processEngineService
-                .getProcessEngine()
-                .tenantIdIn(tenantId)
-                .list();
-        return ResponseEntity.ok(processDefinitionEntities.stream()
-                .map(ProcessDefinitionDto::fromProcessDefinition).toList());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<ProcessDefinitionDto>> listaTask(@RequestHeader("X-Tenant-Id") String tenantId){
+//        ProcessDefinition processDefinition = (ProcessDefinition) this.processEngineService()..getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).tenantIdIn(new String[]{tenantId}).latestVersion().singleResult();
+//
+//        List<ProcessDefinitionEntity> processDefinitionEntities = processEngineService
+//                .getProcessEngine()
+//                .tenantIdIn(tenantId)
+//                .list();
+//        return ResponseEntity.ok(processDefinitionEntities.stream()
+//                .map(ProcessDefinitionDto::fromProcessDefinition).toList());
+//    }
 }
