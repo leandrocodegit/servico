@@ -9,10 +9,15 @@ camunda.bpm:
     id: admin
     password: admin
   authorization:
-    enabled: false
-    authorization-check-revokes: false
-    tenant-check-enabled: true
-
+    enabled: true
+    authorization-check-revokes: true
+  oauth2:
+    sso-logout:
+      enabled: false
+      postLogoutRedirectUri: http://localhost:8085/
+    identity-provider:
+      group-name-attribute: grupos
+      user-name-attribute: preferred_username
 
 spring:
   security:
@@ -20,4 +25,3 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/localhost
-          jws-key-set-uri: http://localhost:8080/realms/localhost/protocol/openid-connect/certs

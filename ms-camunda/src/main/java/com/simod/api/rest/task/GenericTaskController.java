@@ -1,4 +1,4 @@
-package com.simod.api.rest;
+package com.simod.api.rest.task;
 
 import com.simod.api.integracao.ExternalApiService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,12 +16,11 @@ public class GenericTaskController {
     private ExternalApiService externalApiService;
 
 
-
     @GetMapping("/**")
     public ResponseEntity<?> lista(
             @RequestHeader("X-Tenant-Id") String tenantId, HttpServletRequest request) {
         String path = request.getRequestURI();
-        var list = externalApiService.findAll(path.replace("/api/generic","") + "?memberOfTenant=" + tenantId);
+        var list = externalApiService.findAll(path.replace("/api/generic","") + "?tenantIdIn=" + tenantId);
         return ResponseEntity.ok().body(list);
     }
 
