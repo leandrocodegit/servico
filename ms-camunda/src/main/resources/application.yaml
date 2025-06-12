@@ -1,6 +1,23 @@
 server.port: 8085
 spring.datasource.url: jdbc:h2:file:./camunda-h2-database
 
-camunda.bpm.admin-user:
-  id: admin
-  password: admin
+engine:
+  url: http://localhost:8085/engine-rest
+
+camunda.bpm:
+  admin-user:
+    id: admin
+    password: admin
+  authorization:
+    enabled: false
+    authorization-check-revokes: false
+    tenant-check-enabled: true
+
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/localhost
+          jws-key-set-uri: http://localhost:8080/realms/localhost/protocol/openid-connect/certs
