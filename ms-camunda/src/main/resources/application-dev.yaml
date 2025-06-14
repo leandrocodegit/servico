@@ -36,6 +36,3 @@ spring:
           keycloak:
             issuer-uri: http://localhost:8080/realms/localhost
             user-name-attribute: preferred_username
-
-camunda.bpm.authorization:
-      enabled: true

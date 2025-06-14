@@ -11,17 +11,10 @@ camunda.bpm:
   authorization:
     enabled: true
     authorization-check-revokes: true
+    tenant-check-enabled: true
   oauth2:
-    sso-logout:
-      enabled: false
-      postLogoutRedirectUri: http://localhost:8085/
     identity-provider:
       group-name-attribute: grupos
-      user-name-attribute: preferred_username
+keycloak:
+  url: http://localhost:8080/admin/realms
 
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/localhost

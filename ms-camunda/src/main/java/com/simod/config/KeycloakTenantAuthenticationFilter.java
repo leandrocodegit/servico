@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Component
+
 public class KeycloakTenantAuthenticationFilter extends OncePerRequestFilter {
 
     private final ProcessEngine processEngine;
@@ -51,13 +51,13 @@ public class KeycloakTenantAuthenticationFilter extends OncePerRequestFilter {
             List<String> roles = jwt.getClaimAsStringList("grupos");
             IdentityService identityService = processEngine.getIdentityService();
 
-       //    identityService.setAuthentication(username, roles, List.of(tenantId));
+           identityService.setAuthentication(username, roles, List.of(tenantId));
         }
 
         try {
             filterChain.doFilter(request, response);
         } finally {
-        //    processEngine.getIdentityService().clearAuthentication();
+            processEngine.getIdentityService().clearAuthentication();
         }
     }
 
